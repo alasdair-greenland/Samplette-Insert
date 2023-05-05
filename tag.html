@@ -1,0 +1,45 @@
+<div id="track-display">
+    <h3 id="song-title">Artist - Song Name</h3>
+
+    <div id="flow-buttons">
+      <button id="start-stop" class="icon-button" title="Play" onclick="togglePlayback();"><i class="icofont-ui-play"></i></button>
+      <button id="preview-start" class="icon-button" title="Preview start"><i class="icofont-rounded-right"></i></button>
+      <button id="preview-end" class="icon-button" title="Preview end"><i class="icofont-swoosh-right"></i></button>
+    </div>
+    
+    <div id="progress-bar-box">
+      <div id="progress-bar">
+
+      </div>
+    </div>
+
+    <div id="edge-times">
+      <span id="start-time">0:00.0</span>
+      <span id="end-time">3:37</span>
+    </div>
+
+    <div id="slider-container">
+      <div id="sliders-control">
+        <input id="start-slider" type="range" value="0" min="0" max="217" step="0.1"></input>
+        <input id="end-slider" type="range" value="10" min="0" max="217" step="0.1"></input>
+      </div>
+      <div class="form-control">
+        <div class="form-control-container">
+          <div class="form-control-container-min">Start</div>
+          <input class="form-control-container--time--input" type="text" id="start-input" value="0:00.0"/>
+        </div>
+        <div class="form-control-container">
+            <div class="form-control-container--time">End</div>
+            <input class="form-control-container--time--input" type="text" id="end-input" value="0:10.0"/>
+        </div>
+      </div>
+    </div>
+
+    <div id="song-buttons">
+      <button id="favorite" class="icon-button" title="Favorite"><i class="icofont-star"></i></button>
+      <button id="new-song" class="icon-button" title="New Song" onclick="getASong();"><i class="icofont-refresh"></i></button>
+      <button id="download" class="icon-button" title="Download"><i class="icofont-download"></i></button>
+    </div>
+    
+  </div>
+  
