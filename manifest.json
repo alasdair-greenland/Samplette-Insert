@@ -1,0 +1,10 @@
+{
+
+  "manifest_version": 1,
+  "name": "Samplette Insert Manifest",
+  "version": "1.0",
+  "description": "Upgrades samplette.io",
+  "permissions": [
+    "webRequest"
+  ]
+}
