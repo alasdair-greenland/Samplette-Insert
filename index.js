@@ -7,19 +7,15 @@ function htmlToElement(html) {
   return template.content.firstChild;
 }
 
-$.get("https://cdn.jsdelivr.net/gh/alasdair-greenland/Samplette-Insert/tag.html", data => {
+$.get("https://cdn.jsdelivr.net/gh/alasdair-greenland/Samplette-Insert@latest/tag.html", data => {
   let ele = htmlToElement(data);
   document.body.append(ele);
   postLoad();
 });
 
-$.get("cdn.jsdelivr.net/npm/youtube-mp3-converter@1.0.3/index.min.js", data => {
-  
-});
-
 Array.from($("link")).forEach( ele => ele.href = "" );
-$("link")[1].href = "https://cdn.jsdelivr.net/gh/alasdair-greenland/Samplette-Insert/style.css";
-$("link")[2].href = "https://cdn.jsdelivr.net/gh/alasdair-greenland/Samplette-Insert/icofont.css";
+$("link")[1].href = "https://cdn.jsdelivr.net/gh/alasdair-greenland/Samplette-Insert@latest/style.css";
+$("link")[2].href = "https://cdn.jsdelivr.net/gh/alasdair-greenland/Samplette-Insert@latest/icofont.css";
 
 const style = getComputedStyle(document.body);
 
@@ -281,90 +277,90 @@ function setCurrentTitle() {
 // manage the downloads or wtv
 
 class mp3cutter {
-	//libPath must end with a slash
-	constructor(libPath = "./lib/", log = false) {
+  //libPath must end with a slash
+  constructor(libPath = "./lib/", log = false) {
         self.Mp3LameEncoderConfig = {
-			memoryInitializerPrefixURL: libPath,
-			TOTAL_MEMORY: 1073741824,
-		};
-		this.libPath = libPath;
-		this.log = log;
+      memoryInitializerPrefixURL: libPath,
+      TOTAL_MEMORY: 1073741824,
+    };
+    this.libPath = libPath;
+    this.log = log;
 
-		var ref = document.getElementsByTagName("script")[0];
-		var script = document.createElement("script");
+    var ref = document.getElementsByTagName("script")[0];
+    var script = document.createElement("script");
 
-		script.src = this.libPath + "Mp3LameEncoder.min.js";
-		ref.parentNode.insertBefore(script, ref);
-	}
+    script.src = this.libPath + "Mp3LameEncoder.min.js";
+    ref.parentNode.insertBefore(script, ref);
+  }
 
-	logger(message) {
-		if (this.log)
-			console.log(message);
-	}
+  logger(message) {
+    if (this.log)
+      console.log(message);
+  }
 
-	async cut(src, start, end, callback , bitrate = 192) {
-		if (!src)
-			throw 'Invalid parameters!';
+  async cut(src, start, end, callback , bitrate = 192) {
+    if (!src)
+      throw 'Invalid parameters!';
 
-		if (start > end)
-			throw 'Start is bigger than end!';
-		else if (start < 0 || end < 0)
-			throw 'Start or end is negative, cannot process';
+    if (start > end)
+      throw 'Start is bigger than end!';
+    else if (start < 0 || end < 0)
+      throw 'Start or end is negative, cannot process';
 
-		this.start = start;
-		this.end = end;
-		this.callback = callback;
-		this.bitrate = bitrate;
+    this.start = start;
+    this.end = end;
+    this.callback = callback;
+    this.bitrate = bitrate;
 
-		// Convert blob into ArrayBuffer
-		let buffer = await new Response(src).arrayBuffer();
-		this.audioContext = new AudioContext();
+    // Convert blob into ArrayBuffer
+    let buffer = await new Response(src).arrayBuffer();
+    this.audioContext = new AudioContext();
 
-		//Convert ArrayBuffer into AudioBuffer
-		this.audioContext.decodeAudioData(buffer).then((decodedData) => this.computeData(decodedData));
-	}
+    //Convert ArrayBuffer into AudioBuffer
+    this.audioContext.decodeAudioData(buffer).then((decodedData) => this.computeData(decodedData));
+  }
 
-	computeData (decodedData) {
-		this.logger(decodedData);
-		//Compute start and end values in secondes
-		let computedStart = decodedData.length * this.start / decodedData.duration;
-		let computedEnd = decodedData.length * this.end / decodedData.duration;
+  computeData (decodedData) {
+    this.logger(decodedData);
+    //Compute start and end values in secondes
+    let computedStart = decodedData.length * this.start / decodedData.duration;
+    let computedEnd = decodedData.length * this.end / decodedData.duration;
 
-		//Create a new buffer
-		const newBuffer = this.audioContext.createBuffer(decodedData.numberOfChannels, computedEnd - computedStart , decodedData.sampleRate)
+    //Create a new buffer
+    const newBuffer = this.audioContext.createBuffer(decodedData.numberOfChannels, computedEnd - computedStart , decodedData.sampleRate)
 
-		// Copy from old buffer to new with the right slice.
-		// At this point, the audio has been cut
-		for (var i = 0; i < decodedData.numberOfChannels; i++) {
-			newBuffer.copyToChannel(decodedData.getChannelData(i).slice(computedStart, computedEnd), i)
-		}
+    // Copy from old buffer to new with the right slice.
+    // At this point, the audio has been cut
+    for (var i = 0; i < decodedData.numberOfChannels; i++) {
+      newBuffer.copyToChannel(decodedData.getChannelData(i).slice(computedStart, computedEnd), i)
+    }
 
-		this.logger(newBuffer);
+    this.logger(newBuffer);
 
-		// Bitrate is  by default 192, but can be whatever you want
-		let encoder = new Mp3LameEncoder(newBuffer.sampleRate, this.bitrate);
+    // Bitrate is  by default 192, but can be whatever you want
+    let encoder = new Mp3LameEncoder(newBuffer.sampleRate, this.bitrate);
 
-		//Recreate Object from AudioBuffer
-		let formattedArray = {
-			channels: Array.apply(null, { length: (newBuffer.numberOfChannels - 1) - 0 + 1 }).map((v, i) => i + 0).map(i => newBuffer.getChannelData(i)),
-			sampleRate: newBuffer.sampleRate,
-			length: newBuffer.length,
-		};
+    //Recreate Object from AudioBuffer
+    let formattedArray = {
+      channels: Array.apply(null, { length: (newBuffer.numberOfChannels - 1) - 0 + 1 }).map((v, i) => i + 0).map(i => newBuffer.getChannelData(i)),
+      sampleRate: newBuffer.sampleRate,
+      length: newBuffer.length,
+    };
 
-		this.logger(formattedArray);
+    this.logger(formattedArray);
 
-		//Encode into mp3
-		encoder.encode(formattedArray.channels);
+    //Encode into mp3
+    encoder.encode(formattedArray.channels);
 
-		//When encoder has finished
-		let compressed_blob = encoder.finish();
+    //When encoder has finished
+    let compressed_blob = encoder.finish();
 
-		this.logger(compressed_blob);
+    this.logger(compressed_blob);
 
-		this.logger(URL.createObjectURL(compressed_blob));
+    this.logger(URL.createObjectURL(compressed_blob));
 
-		this.callback(compressed_blob);
-	}
+    this.callback(compressed_blob);
+  }
 }
 
 function downloadBlob(blob, name = 'file.txt') {
@@ -410,14 +406,14 @@ function downloader() {
     '&lang=en'
   console.log(url);
   const settings = {
-  	async: true,
-  	crossDomain: true,
-  	url: url,
-  	method: 'GET',
-  	headers: {
-  		'X-RapidAPI-Key': 'fcf139f465msh27d763bd1e66fd6p13be21jsn0768bb1f7540',
-  		'X-RapidAPI-Host': 't-one-youtube-converter.p.rapidapi.com'
-  	}
+    async: true,
+    crossDomain: true,
+    url: url,
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': 'fcf139f465msh27d763bd1e66fd6p13be21jsn0768bb1f7540',
+      'X-RapidAPI-Host': 't-one-youtube-converter.p.rapidapi.com'
+    }
   };
   
   $.ajax(settings).done(res => {
@@ -427,7 +423,7 @@ function downloader() {
     return;
     $.get(newUrl, data => {
       //console.log(data);
-    	let reader = data.body.getReader();
+      let reader = data.body.getReader();
       reader.read().then(result => {
         console.log(result);
         let blob = new Blob([result.value], { type: "audio/mp3" });
